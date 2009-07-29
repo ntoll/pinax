@@ -5,14 +5,21 @@ from django.views.generic.simple import direct_to_template
 
 from wiki import models as wiki_models
 
-from account.openid_consumer import PinaxConsumer
-
 from django.contrib import admin
 admin.autodiscover()
 
+from account.openid_consumer import PinaxConsumer
+
+import intranet_project as project
+
 
 urlpatterns = patterns('',
-    url(r'^$', direct_to_template, {"template": "homepage.html"}, name="home"),
+    url(r'^$', direct_to_template, {
+        "template": "homepage.html",
+        "extra_context": {
+            "about_text": project.__about__,
+        },
+    }, name="home"),
     
     url(r'^admin/invite_user/$', 'signup_codes.views.admin_invite_user', name="admin_invite_user"),
     url(r'^account/signup/$', "signup_codes.views.signup", name="acct_signup"),
@@ -22,9 +29,8 @@ urlpatterns = patterns('',
     (r'^profiles/', include('basic_profiles.urls')),
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
-    #(r'^pastebin/', include('pastebin.urls')),
-    #(r'^quickbar/', include('quickbar.urls')),
-    #(r'^documents/', include('documents.urls')),
+    (r'^tagging_utils/', include('tagging_utils.urls')),
+    (r'^attachments/', include('attachments.urls')),
     (r'^bookmarks/', include('bookmarks.urls')),
     (r'^tasks/', include('tasks.urls')),
     (r'^comments/', include('threadedcomments.urls')),
